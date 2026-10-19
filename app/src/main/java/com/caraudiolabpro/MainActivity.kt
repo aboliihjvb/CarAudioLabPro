@@ -36,6 +36,7 @@ class MainActivity : Activity() {
     private lateinit var status: TextView
     private lateinit var play: Button
     private lateinit var freqText: TextView
+    private lateinit var heroFreqText: TextView
     private lateinit var volText: TextView
     private lateinit var wave: Wave
     private var playing = false
@@ -88,7 +89,7 @@ class MainActivity : Activity() {
         }
         hero.addView(txt("SIGNAL GENERATOR   /   01",10f,C.cyan,true)); gap(hero,10)
         val heroRow=row(); val big=col()
-        freqText=txt("60 Hz",36f,C.white,true); big.addView(freqText)
+        heroFreqText=txt("60 Hz",36f,C.white,true); big.addView(heroFreqText)
         big.addView(txt("LOW FREQUENCY • LIVE CONTROL",9f,C.muted,true))
         heroRow.addView(big,LinearLayout.LayoutParams(0,-2,1f))
         heroRow.addView(TextView(this).apply {
@@ -117,7 +118,7 @@ class MainActivity : Activity() {
         }
         fc.addView(quick)
         fbar.setOnSeekBarChangeListener(object:SeekBar.OnSeekBarChangeListener{
-            override fun onProgressChanged(s:SeekBar?,p:Int,user:Boolean){freq=p+20; freqText.text=String.format(Locale.US,"%,d Hz",freq);engine.frequency=freq.toDouble();wave.invalidate()}
+            override fun onProgressChanged(s:SeekBar?,p:Int,user:Boolean){freq=p+20; freqText.text=String.format(Locale.US,"%,d Hz",freq);heroFreqText.text=String.format(Locale.US,"%,d Hz",freq);engine.frequency=freq.toDouble();wave.invalidate()}
             override fun onStartTrackingTouch(s:SeekBar?){}
             override fun onStopTrackingTouch(s:SeekBar?){}
         })
@@ -184,7 +185,7 @@ class MainActivity : Activity() {
         setTextColor(if(selected)Color.BLACK else C.white);background=shape(if(selected)C.lime else C.tile,if(selected)0 else C.line,13)
         minHeight=0;minimumHeight=0;stateListAnimator=null;setPadding(dp(4),dp(3),dp(4),dp(3));setOnClickListener{action()}
     }
-    private fun setFreq(value:Int,bar:SeekBar){freq=value.coerceIn(20,20000);bar.progress=freq-20;freqText.text=String.format(Locale.US,"%,d Hz",freq);engine.frequency=freq.toDouble();wave.invalidate()}
+    private fun setFreq(value:Int,bar:SeekBar){freq=value.coerceIn(20,20000);bar.progress=freq-20;freqText.text=String.format(Locale.US,"%,d Hz",freq);heroFreqText.text=String.format(Locale.US,"%,d Hz",freq);engine.frequency=freq.toDouble();wave.invalidate()}
     private fun setMode(value:AudioEngine.Mode){mode=value;engine.mode=value;toast(when(value){AudioEngine.Mode.SINE->"Sine wave selected";AudioEngine.Mode.SWEEP->"Sweep selected: $sweepStart–$sweepEnd Hz";AudioEngine.Mode.WHITE_NOISE->"White noise selected"});wave.invalidate()}
     private fun toggleAudio(){
         if(playing){stopAudio();return}
