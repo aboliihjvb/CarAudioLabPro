@@ -45,6 +45,9 @@ class MainActivity : Activity() {
     private var volume = 12
     private var sweepStart = 20
     private var sweepEnd = 200
+    private lateinit var sineButton: Button
+    private lateinit var sweepButton: Button
+    private lateinit var noiseButton: Button
 
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
     private fun shape(color: Int, stroke: Int = 0, radius: Int = 18) =
@@ -126,9 +129,12 @@ class MainActivity : Activity() {
 
         val mc=card(); section(mc,"02","SIGNAL TYPE","SELECT YOUR TEST"); gap(mc,12)
         val modes=row()
-        modes.addView(btn("∿  SINE",selected=true){setMode(AudioEngine.Mode.SINE)},LinearLayout.LayoutParams(0,dp(48),1f).apply{setMargins(0,0,dp(4),0)})
-        modes.addView(btn("↗  SWEEP"){setMode(AudioEngine.Mode.SWEEP)},LinearLayout.LayoutParams(0,dp(48),1f).apply{setMargins(dp(3),0,dp(3),0)})
-        modes.addView(btn("〰 NOISE"){setMode(AudioEngine.Mode.WHITE_NOISE)},LinearLayout.LayoutParams(0,dp(48),1f).apply{setMargins(dp(4),0,0,0)})
+        sineButton=btn("∿  SINE",selected=mode==AudioEngine.Mode.SINE){setMode(AudioEngine.Mode.SINE)}
+        sweepButton=btn("↗  SWEEP",selected=mode==AudioEngine.Mode.SWEEP){setMode(AudioEngine.Mode.SWEEP)}
+        noiseButton=btn("〰 NOISE",selected=mode==AudioEngine.Mode.WHITE_NOISE){setMode(AudioEngine.Mode.WHITE_NOISE)}
+        modes.addView(sineButton,LinearLayout.LayoutParams(0,dp(48),1f).apply{setMargins(0,0,dp(4),0)})
+        modes.addView(sweepButton,LinearLayout.LayoutParams(0,dp(48),1f).apply{setMargins(dp(3),0,dp(3),0)})
+        modes.addView(noiseButton,LinearLayout.LayoutParams(0,dp(48),1f).apply{setMargins(dp(4),0,0,0)})
         mc.addView(modes); gap(mc,10)
         mc.addView(txt("SWEEP RANGE",10f,C.muted,true)); gap(mc,6)
         val sweep=row()
@@ -186,7 +192,14 @@ class MainActivity : Activity() {
         minHeight=0;minimumHeight=0;stateListAnimator=null;setPadding(dp(4),dp(3),dp(4),dp(3));setOnClickListener{action()}
     }
     private fun setFreq(value:Int,bar:SeekBar){freq=value.coerceIn(20,20000);bar.progress=freq-20;freqText.text=String.format(Locale.US,"%,d Hz",freq);heroFreqText.text=String.format(Locale.US,"%,d Hz",freq);engine.frequency=freq.toDouble();wave.invalidate()}
-    private fun setMode(value:AudioEngine.Mode){mode=value;engine.mode=value;toast(when(value){AudioEngine.Mode.SINE->"Sine wave selected";AudioEngine.Mode.SWEEP->"Sweep selected: $sweepStart–$sweepEnd Hz";AudioEngine.Mode.WHITE_NOISE->"White noise selected"});wave.invalidate()}
+    private fun setMode(value:AudioEngine.Mode){
+        mode=value;engine.mode=value
+        if(::sineButton.isInitialized){sineButton.background=shape(if(value==AudioEngine.Mode.SINE)C.lime else C.tile,if(value==AudioEngine.Mode.SINE)0 else C.line,13);sineButton.setTextColor(if(value==AudioEngine.Mode.SINE)Color.BLACK else C.white)}
+        if(::sweepButton.isInitialized){sweepButton.background=shape(if(value==AudioEngine.Mode.SWEEP)C.lime else C.tile,if(value==AudioEngine.Mode.SWEEP)0 else C.line,13);sweepButton.setTextColor(if(value==AudioEngine.Mode.SWEEP)Color.BLACK else C.white)}
+        if(::noiseButton.isInitialized){noiseButton.background=shape(if(value==AudioEngine.Mode.WHITE_NOISE)C.lime else C.tile,if(value==AudioEngine.Mode.WHITE_NOISE)0 else C.line,13);noiseButton.setTextColor(if(value==AudioEngine.Mode.WHITE_NOISE)Color.BLACK else C.white)}
+        toast(when(value){AudioEngine.Mode.SINE->"Sine wave selected";AudioEngine.Mode.SWEEP->"Sweep selected: $sweepStart–$sweepEnd Hz";AudioEngine.Mode.WHITE_NOISE->"White noise selected"})
+        wave.invalidate()
+    }
     private fun toggleAudio(){
         if(playing){stopAudio();return}
         try{
