@@ -67,7 +67,7 @@ class MainActivity : Activity() {
     }
 
     private fun buildUi() {
-        val scroll=ScrollView(this).apply { setBackgroundColor(C.bg); fillViewport=true }
+        val scroll=ScrollView(this).apply { setBackgroundColor(C.bg); isFillViewport=true }
         val root=col().apply { setPadding(dp(17),dp(20),dp(17),dp(26)) }
         scroll.addView(root)
 
@@ -110,6 +110,7 @@ class MainActivity : Activity() {
             progressTintList=android.content.res.ColorStateList.valueOf(C.lime)
             thumbTintList=android.content.res.ColorStateList.valueOf(C.lime)
         }
+        freqText=txt(String.format(Locale.US,"%,d Hz",freq),20f,C.cyan,true); fc.addView(freqText); gap(fc,4)
         fc.addView(fbar,lp(-1,dp(38)))
         val limits=row(); limits.addView(txt("20 Hz",10f,C.muted),LinearLayout.LayoutParams(0,-2,1f))
         limits.addView(txt("20,000 Hz",10f,C.muted).apply { gravity=Gravity.RIGHT }); fc.addView(limits)
