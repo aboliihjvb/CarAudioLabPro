@@ -1,10 +1,25 @@
 # Car Audio Lab Pro
 
-ابزار آفلاین تست سیستم صوتی خودرو برای اندروید.
+An offline Android signal generator for car-audio testing, with a dark neon dashboard and on-device audio generation.
 
-## ساخت APK با گوشی
-1. از تب **Actions** اجرای workflow با نام **Build Android APK** را باز کن.
-2. روی **Run workflow** بزن یا منتظر اجرای خودکار بعد از commit بمان.
-3. بعد از موفقیت، APK را از بخش **Artifacts** دانلود کن.
+## Included
+- Neon dark UI with live frequency readout and signal-wave preview
+- Sine tone, frequency sweep and white-noise modes
+- Quick bass frequency presets and a conservative digital output range
+- Amplifier RMS voltage helper
+- No account or internet connection required during use
 
-این نسخه ابزارهای تولید صدای سینوسی، sweep و نویز را دارد. هنگام تست، صدا را از حداقل شروع کن؛ فرکانس‌های پایین با توان زیاد می‌توانند به بلندگو و آمپلی‌فایر آسیب بزنند.
+## Build an APK on GitHub
+1. Open the **Actions** tab.
+2. Choose **Build Android APK**.
+3. If needed, press **Run workflow**.
+4. Open the successful run and download the `CarAudioLabPro-debug-apk` artifact.
+5. Extract the ZIP and install the APK on your Android phone.
+
+## Safety
+Start with the phone and head-unit volume at minimum. Continuous low-frequency tones and noise can overheat speakers or amplifiers, and can damage hearing. Never test a tweeter with deep bass. The digital output percentage is not an SPL measurement.
+
+## Project
+- Package: `com.caraudiolabpro`
+- Version: `1.1.0`
+- Minimum Android: API 23
